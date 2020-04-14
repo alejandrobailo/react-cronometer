@@ -7,6 +7,7 @@ const GlobalStyle = createGlobalStyle`
         background-color: #222;
         color: #387EF5;
         text-align: center;
+         font-family: Helvetica, sans-serif;
     }
 `
 class App extends Component {

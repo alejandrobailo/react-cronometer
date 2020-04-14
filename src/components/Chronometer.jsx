@@ -14,6 +14,11 @@ const Button = styled.button`
     color: ${({ disabled }) => disabled ? '#444' : '#FFF'};
 `
 
+const List = styled.ul`
+    list-style: none;
+    padding-left: 0;
+`
+
 class Chronometer extends Component {
 
     state = {
@@ -21,7 +26,9 @@ class Chronometer extends Component {
         minutes: 0,
         seconds: 0,
         miliseconds: 0,
-        running: false
+        running: false,
+        allTimeStamps: [],
+        started: false
     }
 
     //Función que se llama con el boton start
@@ -31,6 +38,8 @@ class Chronometer extends Component {
                 this.tick();
             }, 100)
         }
+
+        this.setState({ running: true, started: true })
     }
 
     //Conteo del cronómetro
@@ -60,17 +69,29 @@ class Chronometer extends Component {
 
     //Función que se llama con el boton stop
     handleStopClick = () => {
-
+        if (this.state.running) {
+            clearInterval(this.interval);
+            this.setState({ running: false })
+        }
     }
 
     //Función que se llama con el boton timestamp
     handleTimestamp = () => {
+        const { hours, minutes, seconds, miliseconds, allTimeStamps } = this.state;
 
+        const timestamp = { hours, minutes, seconds, miliseconds };
+
+        const timestamps = allTimeStamps;
+
+        timestamps.push(timestamp);
+
+        this.setState({ allTimeStamps: timestamps })
     }
 
     //Función que se llama con el boton reset
     handleReset = () => {
-
+        this.updateTimer(0, 0, 0, 0);
+        this.setState({ allTimeStamps: [], started: false })
     }
 
     //Función de actualización del estado
@@ -85,7 +106,7 @@ class Chronometer extends Component {
     }
 
     render() {
-        let { hours, minutes, seconds, miliseconds, running } = this.state;
+        let { hours, minutes, seconds, miliseconds, running, allTimeStamps } = this.state;
         hours = this.addZero(hours);
         minutes = this.addZero(minutes);
         seconds = this.addZero(seconds);
@@ -95,9 +116,22 @@ class Chronometer extends Component {
             <>
                 <h3>{`${hours} : ${minutes} : ${seconds} : ${miliseconds}`}</h3>
                 <Button disabled={running} onClick={this.handleStartClick}>START</Button>
-                <Button disabled={running}>STOP</Button>
-                <Button disabled={running}>TIMESTAMP</Button>
-                <Button disabled={running}>RESET</Button>
+                <Button disabled={!running} onClick={this.handleStopClick}>STOP</Button>
+                <Button disabled={!running} onClick={this.handleTimestamp}>TIMESTAMP</Button>
+                {this.state.started && <Button disabled={running} onClick={this.handleReset}>RESET</Button>}
+                <List>
+                    {allTimeStamps.map((timestamp, index) => (
+                        <li key={id()}>
+                            {`
+                                ${index + 1} - 
+                                ${this.addZero(timestamp.hours)} :
+                                ${this.addZero(timestamp.minutes)} : 
+                                ${this.addZero(timestamp.seconds)} : 
+                                ${this.addZero(timestamp.miliseconds)}
+                            `}
+                        </li>
+                    ))}
+                </List>
             </>
         )
     }
