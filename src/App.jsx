@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import Chronometer from './components/Chronometer'
+import ChronometerHook from './components/ChronometerHook'
 import { createGlobalStyle } from 'styled-components'
 
 const GlobalStyle = createGlobalStyle`
@@ -17,7 +18,7 @@ class App extends Component {
             <>
                 <GlobalStyle />
                 <h1>Chronometer</h1>
-                <Chronometer />
+                <ChronometerHook />
             </>
         )
     }
