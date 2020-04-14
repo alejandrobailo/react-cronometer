@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-
 import { generate as id } from 'shortid'
-
 import styled from 'styled-components'
 
 const Button = styled.button`
@@ -13,14 +11,12 @@ const Button = styled.button`
     margin: .5rem;
     color: ${({ disabled }) => disabled ? '#444' : '#FFF'};
 `
-
 const List = styled.ul`
     list-style: none;
     padding-left: 0;
 `
 
 class Chronometer extends Component {
-
     state = {
         hours: 0,
         minutes: 0,
@@ -31,18 +27,15 @@ class Chronometer extends Component {
         started: false
     }
 
-    //Función que se llama con el boton start
     handleStartClick = () => {
         if (!this.state.running) {
             this.interval = setInterval(() => {
                 this.tick();
             }, 100)
         }
-
         this.setState({ running: true, started: true })
     }
 
-    //Conteo del cronómetro
     tick() {
         let hours = this.state.hours;
         let minutes = this.state.minutes;
@@ -63,11 +56,9 @@ class Chronometer extends Component {
             minutes = 0;
             hours = hours + 1;
         }
-
         this.updateTimer(hours, minutes, seconds, miliseconds);
     }
 
-    //Función que se llama con el boton stop
     handleStopClick = () => {
         if (this.state.running) {
             clearInterval(this.interval);
@@ -75,26 +66,19 @@ class Chronometer extends Component {
         }
     }
 
-    //Función que se llama con el boton timestamp
     handleTimestamp = () => {
         const { hours, minutes, seconds, miliseconds, allTimeStamps } = this.state;
-
         const timestamp = { hours, minutes, seconds, miliseconds };
-
         const timestamps = allTimeStamps;
-
         timestamps.push(timestamp);
-
         this.setState({ allTimeStamps: timestamps })
     }
 
-    //Función que se llama con el boton reset
     handleReset = () => {
         this.updateTimer(0, 0, 0, 0);
         this.setState({ allTimeStamps: [], started: false })
     }
 
-    //Función de actualización del estado
     updateTimer(hours, minutes, seconds, miliseconds) {
         this.setState({
             hours, minutes, seconds, miliseconds
